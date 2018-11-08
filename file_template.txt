@@ -1,0 +1,8 @@
+/**
+ * File:        Class.java
+ * Description: Description.
+ * Created:     mm/dd/yyyy
+ *
+ * @author author
+ * @version 1.0
+ */

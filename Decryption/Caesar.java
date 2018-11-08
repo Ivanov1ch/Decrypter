@@ -37,10 +37,19 @@ public class Caesar extends Decrypter {
 
 			switch(charset) {
 				case CharSet.ALPHABETIC:
-					if(Character.isUpperCase(c)) // TODO
+					// preserve case
+					if(Character.isUpperCase(c)) {
+						base = 'A';
+					}
+					plainText += "" + (char) ((c - shift + numChars) % numChars + base);
+					if(Character.isUpperCase(c)) {
+						base = 'a';
+					}
 					break;
 			}
 		}
+		
+		return plainText;
 	}
 
 	public String decrypt(String key, CharSet charset) {

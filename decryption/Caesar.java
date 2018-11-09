@@ -1,6 +1,6 @@
 /**
  * File:        Caesar.java
- * Description: Decrypts Caesar Ciphers.
+ * Description: Decrypts Caesar Ciphers with a shift.
  * Created:     11/08/18
  *
  * @author Justin Zhu
@@ -14,42 +14,16 @@ public class Caesar extends Decrypter {
     }
 
 	public String decrypt(int shift, CharSet charset) {
-		char base = '\0';
-		int numChars = 0;
-		switch(charset) { // TODO Add more cases
-			case ALPHABETIC:
-				base = 'a';
-				numChars = 26;
-				break;
-		}
+		char base = charset.getBaseChar();
+		int numChars = charset.getNumChars();
 
 		String plainText = "";
 		for(int i = 0; i < cipherText.length(); i++) {
 			char c = cipherText.charAt(i);
-			boolean whitespace = false;
-			switch (c) {
-				case ' ':
-				case '\n':
-				case '\t':
-					whitespace = true;
-					break;
-			}
-			if(whitespace) {
+			if(Character.isWhitespace(c))
 				continue;
-			}
-
-			switch(charset) { // TODO Add more cases
-				case ALPHABETIC:
-					// preserve case
-					if(Character.isUpperCase(c)) {
-						base = 'A';
-					}
-					plainText += "" + (char) ((c - base - shift + numChars) % numChars + base);
-					if(Character.isUpperCase(c)) {
-						base = 'a';
-					}
-					break;
-			}
+			
+			plainText += "" + super.undoShift(c, shift, charset);
 		}
 		
 		return plainText;

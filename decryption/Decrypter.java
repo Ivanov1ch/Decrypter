@@ -19,4 +19,23 @@ public abstract class Decrypter {
 	public void setCipherText(String cipherText) {
 		this.cipherText = cipherText;
 	}
+	
+	public static char undoShift(char c, int shift, CharSet charset) {
+		char base = charset.getBaseChar();
+		int numChars = charset.getNumChars();
+		char result = '\0';
+		switch(charset) { // TODO Add more cases
+			case ALPHABETIC:
+				// preserve case
+				if(Character.isUpperCase(c)) {
+					base = 'A';
+				}
+				result = (char) ((c - base - shift + numChars) % numChars + base);
+				if(Character.isUpperCase(c)) {
+					base = 'a';
+				}
+				break;
+		}
+		return result;
+	}
 }

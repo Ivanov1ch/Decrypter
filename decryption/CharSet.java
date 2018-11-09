@@ -9,7 +9,23 @@
 
 
 public enum CharSet {
-	ALPHABETIC,
+	ALPHABETIC ('a', 26),
 
-	NUMERIC
+	NUMERIC ('0', 10);
+	
+	private final char baseChar;
+	private final int numChars;
+	
+	CharSet(char baseChar, int numChars) {
+		this.baseChar = baseChar;
+		this.numChars = numChars;
+	}
+	
+	char getBaseChar() {
+		return baseChar;
+	}
+	
+	int getNumChars() {
+		return numChars;
+	}
 }

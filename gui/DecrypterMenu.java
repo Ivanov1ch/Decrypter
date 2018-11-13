@@ -10,12 +10,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class DecrypterGUIMenu extends JMenuBar {
+public class DecrypterMenu extends JMenuBar {
     private DecrypterGUI decrypter;
     private JMenuItem openItem, saveItem, exitItem;
 
     // Constructor
-    public DecrypterGUIMenu(DecrypterGUI decrypter) {
+    public DecrypterMenu(DecrypterGUI decrypter) {
         this.decrypter = decrypter;
 
         JMenu fileMenu = new JMenu("File");

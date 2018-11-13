@@ -1,7 +1,7 @@
 /**
  * File:        Decrypter.java
  * Description: General Decrypter Class.
- * Created:     11+7=18
+ * Created:     11/7/18
  *
  * @author Justin Zhu
  * @version 1.0
@@ -13,6 +13,8 @@ public abstract class Decrypter {
 	public Decrypter(String cipherText) {
 		setCipherText(cipherText);
 	}
+
+	public abstract String decrypt(String key);
 
 	public abstract String decrypt(String key, CharSet charset);
 

@@ -9,42 +9,47 @@
 
 public class Caesar extends Decrypter {
 
-	public Caesar(String cipherText) {
+    public Caesar(String cipherText) {
         super(cipherText);
     }
-    
+
     public String decrypt(int shift) {
-    	return decrypt(shift, CharSet.ALPHANUMERIC);
+        return decrypt(shift, CharSet.ALPHANUMERIC);
     }
 
-	public String decrypt(int shift, CharSet charset) {
-		char base = charset.getBaseChar();
-		int numChars = charset.getNumChars();
+    public String decrypt(int shift, CharSet charset) {
+        char base = charset.getBaseChar();
+        int numChars = charset.getNumChars();
 
-		String plainText = "";
-		for(int i = 0; i < cipherText.length(); i++) {
-			char c = cipherText.charAt(i);
-			if(Character.isWhitespace(c))
-				continue;
-			
-			plainText += "" + super.undoShift(c, shift, charset);
-		}
-		
-		return plainText;
-	}
+        String plainText = "";
+        for (int i = 0; i < cipherText.length(); i++) {
+            char c = cipherText.charAt(i);
+            if (Character.isWhitespace(c))
+                continue;
 
-	@Override
-	public String decrypt(String key, CharSet charset) {
-		try {
-			return decrypt(Integer.parseInt(key), charset);
-		} catch (Exception e) {
-			return null;
-		}
-	}
-	
-	public static void main(String[] args) {
-		Caesar caesar = new Caesar("bcde1234");
-		System.out.println(caesar.decrypt(1, CharSet.ALPHANUMERIC));
-		
-	}
+            plainText += "" + super.undoShift(c, shift, charset);
+        }
+
+        return plainText;
+    }
+
+    @Override
+    public String decrypt(String key) {
+		return decrypt(key, CharSet.ALPHANUMERIC);
+    }
+
+    @Override
+    public String decrypt(String key, CharSet charset) {
+        try {
+            return decrypt(Integer.parseInt(key), charset);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static void main(String[] args) {
+        Caesar caesar = new Caesar("bcde1234");
+        System.out.println(caesar.decrypt(1, CharSet.ALPHANUMERIC));
+
+    }
 }

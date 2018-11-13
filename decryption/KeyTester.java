@@ -15,8 +15,8 @@ public class KeyTester {
 
     private final double PERCENT_VALID_WORDS = 0.9; // How many of the words need to be valid in order to accept the key as valid (0.9 = 90%)
     private Decrypter decrypter;
-    private CharSet charSet;
-    private String dictionaryPath = "dictionary.txt";
+    private CharSet keyCharSet; // The CharSet that will be applied to the key
+    private String dictionaryPath = "C:\\Users\\daniv\\Dropbox\\Programming\\AP Java\\Projects\\Decrypter\\decryption\\dictionary.txt";
     private String validWords = "";
 
     public KeyTester() {
@@ -27,9 +27,9 @@ public class KeyTester {
         this(decrypter, CharSet.NUMERIC);
     }
 
-    public KeyTester(Decrypter decrypter, CharSet charSet) {
+    public KeyTester(Decrypter decrypter, CharSet keyCharSet) {
         this.decrypter = decrypter;
-        this.charSet = charSet;
+        this.keyCharSet = keyCharSet;
 
         File dict;
 
@@ -51,12 +51,7 @@ public class KeyTester {
     }
 
     public boolean isValidKey(String key) {
-        for (int index = 0; index < key.length(); index++) {
-            if (!charSet.isInCharSet(key.charAt(index)))
-                return false;
-        }
-
-        switch (charSet) {
+        switch (keyCharSet) {
             case NUMERIC:
                 try {
                     Integer.parseInt(key);
@@ -69,7 +64,7 @@ public class KeyTester {
                     return false;
 
                 // The key matches the format the cipher asks for - we can safely decrypt
-                String decrypted = decrypter.decrypt(key, charSet);
+                String decrypted = decrypter.decrypt(key);
 
                 return isValidDecryption(decrypted);
             case ALPHABETIC:
@@ -80,7 +75,7 @@ public class KeyTester {
                     return false;
 
                 // The key matches the format the cipher asks for - we can safely decrypt
-                String decryptedMessages = decrypter.decrypt(key, charSet);
+                String decryptedMessages = decrypter.decrypt(key);
 
                 return isValidDecryption(decryptedMessages);
             default:

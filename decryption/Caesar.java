@@ -24,10 +24,10 @@ public class Caesar extends Decrypter {
         String plainText = "";
         for (int i = 0; i < cipherText.length(); i++) {
             char c = cipherText.charAt(i);
-            if (Character.isWhitespace(c))
-                continue;
+            if (!Character.isWhitespace(c))
+                c = super.undoShift(c, shift, charset);
 
-            plainText += "" + super.undoShift(c, shift, charset);
+            plainText += "" + c;
         }
 
         return plainText;
@@ -40,16 +40,23 @@ public class Caesar extends Decrypter {
 
     @Override
     public String decrypt(String key, CharSet charset) {
-        try {
-            return decrypt(Integer.parseInt(key), charset);
-        } catch (Exception e) {
-            return null;
+    	if (key.length() > 1)
+    		return null;
+    	char c = key.charAt(0);
+        if (Character.isDigit(c)) {
+            return decrypt(Integer.parseInt("" + key.charAt(0)), charset);
+        } 
+        else if (Character.isLetter(c)) {
+			c = Character.toLowerCase(c);
+			System.out.println(c);
+            return decrypt((int) (c - 'a') + 1, charset);
         }
+        return null;
     }
 
     public static void main(String[] args) {
-        Caesar caesar = new Caesar("bcde1234");
-        System.out.println(caesar.decrypt(1, CharSet.ALPHANUMERIC));
+        Caesar caesar = new Caesar("bcde 1234");
+        System.out.println(caesar.decrypt("a"));
 
     }
 }

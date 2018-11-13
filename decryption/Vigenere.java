@@ -13,6 +13,7 @@ public class Vigenere extends Decrypter {
         super(cipherText);
     }
     
+    @Override
     public String decrypt(String key) {
     	return decrypt(key, CharSet.ALPHANUMERIC);
     }
@@ -23,25 +24,35 @@ public class Vigenere extends Decrypter {
         int numChars = charset.getNumChars();
 
         String plainText = "";
-        for (int i = 0; i < cipherText.length(); i++) {
+        for (int i = 0, keyIndex = 0; i < cipherText.length(); i++) {
             char c = cipherText.charAt(i);
-            if (Character.isWhitespace(c))
-                continue;
+            if (!Character.isWhitespace(c)) {
 
-            int shift = key.charAt(i % key.length()); 
-            if (Character.isLetter(shift)) {
-                shift -= Character.isUpperCase((char) shift) ? 'A' : 'a';
+		        int shift = key.charAt(keyIndex % key.length()); 
+		        if (Character.isLetter(shift)) {
+		            shift -= Character.isUpperCase((char) shift) ? 'A' : 'a';
+		            shift++;
+		        }
+		        else if (Character.isDigit(shift)) {
+		        	shift -= '0';
+		        }
+		        else {
+		        	return null; // Invalid key
+		        }
+		        
+		        c = super.undoShift(c, shift, charset);
+		        keyIndex++;
             }
 
-            plainText += "" + super.undoShift(c, shift, charset);
+            plainText += "" + c;
         }
 
         return plainText;
     }
 
     public static void main(String[] args) {
-        Vigenere vigenere = new Vigenere("bbbb1234");
-        System.out.println(vigenere.decrypt("bc", CharSet.ALPHABETIC));
+        Vigenere vigenere = new Vigenere("bbbb 1234");
+        System.out.println(vigenere.decrypt("b3", CharSet.ALPHABETIC));
 
     }
 }

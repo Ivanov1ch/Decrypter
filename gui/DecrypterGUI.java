@@ -87,7 +87,7 @@ public class DecrypterGUI extends JFrame
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		
-        go = new JButton("Refresh");
+        go = new JButton("Decrypt");
         go.addActionListener(this);
         
 		JLabel cipherTextLabel = new JLabel("Ciphertext:");

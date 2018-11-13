@@ -12,6 +12,10 @@ public class Caesar extends Decrypter {
 	public Caesar(String cipherText) {
         super(cipherText);
     }
+    
+    public String decrypt(int shift) {
+    	return decrypt(shift, CharSet.ALPHANUMERIC);
+    }
 
 	public String decrypt(int shift, CharSet charset) {
 		char base = charset.getBaseChar();

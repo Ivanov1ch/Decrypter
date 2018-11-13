@@ -12,27 +12,24 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 public class KeyTester {
-    public static enum KeySettings {ALPHABETIC, NUMERIC}
-
-    ;
 
     private final double PERCENT_VALID_WORDS = 0.9; // How many of the words need to be valid in order to accept the key as valid (0.9 = 90%)
     private Decrypter decrypter;
-    private KeySettings keySettings;
+    private CharSet charSet;
     private String dictionaryPath = "dictionary.txt";
     private String validWords = "";
 
     public KeyTester() {
-        this(null, KeySettings.NUMERIC);
+        this(null, CharSet.NUMERIC);
     }
 
     public KeyTester(Decrypter decrypter) {
-        this(decrypter, KeySettings.NUMERIC);
+        this(decrypter, CharSet.NUMERIC);
     }
 
-    public KeyTester(Decrypter decrypter, KeySettings keySettings) {
+    public KeyTester(Decrypter decrypter, CharSet charSet) {
         this.decrypter = decrypter;
-        this.keySettings = keySettings;
+        this.charSet = charSet;
 
         File dict;
 
@@ -54,7 +51,12 @@ public class KeyTester {
     }
 
     public boolean isValidKey(String key) {
-        switch (keySettings) {
+        for (int index = 0; index < key.length(); index++) {
+            if (!charSet.isInCharSet(key.charAt(index)))
+                return false;
+        }
+
+        switch (charSet) {
             case NUMERIC:
                 try {
                     Integer.parseInt(key);
@@ -63,11 +65,11 @@ public class KeyTester {
                     return false;
                 }
 
-                if (decrypter instanceof Vignere)
+                if (decrypter instanceof Vigenere)
                     return false;
 
                 // The key matches the format the cipher asks for - we can safely decrypt
-                String decrypted = decrypter.decrypt(key.trim());
+                String decrypted = decrypter.decrypt(key, charSet);
 
                 return isValidDecryption(decrypted);
             case ALPHABETIC:
@@ -78,9 +80,9 @@ public class KeyTester {
                     return false;
 
                 // The key matches the format the cipher asks for - we can safely decrypt
-                String decrypted = decrypter.decrypt(key.trim());
+                String decryptedMessages = decrypter.decrypt(key, charSet);
 
-                return isValidDecryption(decrypted);
+                return isValidDecryption(decryptedMessages);
             default:
                 return false;
         }

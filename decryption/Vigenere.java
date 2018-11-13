@@ -12,7 +12,11 @@ public class Vigenere extends Decrypter {
     public Vigenere(String cipherText) {
         super(cipherText);
     }
-
+    
+    public String decrypt(String key) {
+    	return decrypt(key, CharSet.ALPHANUMERIC);
+    }
+    
     @Override
     public String decrypt(String key, CharSet charset) {
         char base = charset.getBaseChar(), keyBase = charset.getBaseChar();
@@ -24,8 +28,8 @@ public class Vigenere extends Decrypter {
             if (Character.isWhitespace(c))
                 continue;
 
-            int shift = key.charAt(i % key.length());
-            if (charset == CharSet.ALPHABETIC) {
+            int shift = key.charAt(i % key.length()); 
+            if (Character.isLetter(shift)) {
                 shift -= Character.isUpperCase((char) shift) ? 'A' : 'a';
             }
 
@@ -36,7 +40,7 @@ public class Vigenere extends Decrypter {
     }
 
     public static void main(String[] args) {
-        Vigenere vigenere = new Vigenere("bbbb");
+        Vigenere vigenere = new Vigenere("bbbb1234");
         System.out.println(vigenere.decrypt("bc", CharSet.ALPHABETIC));
 
     }

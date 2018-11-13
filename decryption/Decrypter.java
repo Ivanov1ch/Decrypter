@@ -21,6 +21,13 @@ public abstract class Decrypter {
 	}
 	
 	public static char undoShift(char c, int shift, CharSet charset) {
+		if (Character.isLetter(c)) {
+			charset = CharSet.ALPHABETIC;
+		}
+		if (Character.isDigit(c)) {
+			charset = CharSet.NUMERIC;
+			System.out.println(c);
+		}
 		char base = charset.getBaseChar();
 		int numChars = charset.getNumChars();
 		char result = '\0';
@@ -30,10 +37,14 @@ public abstract class Decrypter {
 				if(Character.isUpperCase(c)) {
 					base = 'A';
 				}
-				result = (char) ((c - base - shift + numChars) % numChars + base);
+				result = (char) ((c - base - shift + numChars * 20) % numChars + base);
 				if(Character.isUpperCase(c)) {
 					base = 'a';
 				}
+				break;
+				
+			case NUMERIC:
+				result = (char) ((c - base - shift + numChars * 20) % numChars + base);
 				break;
 		}
 		return result;

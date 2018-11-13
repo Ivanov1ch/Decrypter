@@ -39,8 +39,8 @@ public class Caesar extends Decrypter {
 	}
 	
 	public static void main(String[] args) {
-		Caesar caesar = new Caesar("bcde");
-		System.out.println(caesar.decrypt(1, CharSet.ALPHABETIC));
+		Caesar caesar = new Caesar("bcde1234");
+		System.out.println(caesar.decrypt(1, CharSet.ALPHANUMERIC));
 		
 	}
 }

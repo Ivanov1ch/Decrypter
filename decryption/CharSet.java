@@ -9,32 +9,40 @@
 
 
 public enum CharSet {
-    ALPHABETIC('a', 26),
+	ALPHABETIC ('a', 26),
 
-    NUMERIC('0', 10);
-
-    private final char baseChar;
-    private final int numChars;
-
-    CharSet(char baseChar, int numChars) {
-        this.baseChar = baseChar;
-        this.numChars = numChars;
-    }
-
-    char getBaseChar() {
-        return baseChar;
-    }
-
-    int getNumChars() {
-        return numChars;
-    }
-
-    boolean isInCharSet(char c) {
-        char lowerChar = c;
-        if (this == CharSet.ALPHABETIC) {
-            lowerChar = Character.toLowerCase(c);
-        }
-
-        return lowerChar - baseChar < numChars;
-    }
+	NUMERIC ('0', 10),
+	
+	ALPHANUMERIC ('a', 26);
+	
+	private final char baseChar;
+	private final int numChars;
+	
+	CharSet(char baseChar, int numChars) {
+		this.baseChar = baseChar;
+		this.numChars = numChars;
+	}
+	
+	char getBaseChar() {
+		return baseChar;
+	}
+	
+	int getNumChars() {
+		return numChars;
+	}
+	
+	boolean isInCharSet(char c) {
+		if (this == CharSet.ALPHANUMERIC) {
+			return CharSet.ALPHABETIC.isInCharSet(c) || CharSet.NUMERIC.isInCharSet(c);
+		}
+		if (this == CharSet.ALPHABETIC) {
+			c = Character.toLowerCase(c);
+		}
+		
+		return c - baseChar < numChars && c - baseChar > 0;
+	}
+	
+	boolean isAlphabetic() {
+		return this == CharSet.ALPHABETIC || this == CharSet.ALPHANUMERIC;
+	}
 }

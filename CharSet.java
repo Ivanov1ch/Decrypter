@@ -30,6 +30,10 @@ public enum CharSet {
 	}
 	
 	boolean isInCharSet(char c) {
-		// TODO
+		if(this == CharSet.ALPHABETIC) {
+			c = c.toLower();
+		}
+		
+		return c - baseChar < numChars;
 	}
 }

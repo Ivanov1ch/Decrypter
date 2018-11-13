@@ -34,6 +34,6 @@ public enum CharSet {
 			c = c.toLower();
 		}
 		
-		return c - baseChar < numChars;
+		return c - baseChar < numChars && c - baseChar > 0;
 	}
 }

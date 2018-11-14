@@ -15,11 +15,11 @@ public class KeyGen {
     private String keyDecryptions = ""; // A string of all the possible keys and the decryptions they give, separated by \0s
     private KeyTester keyTester;
 
-    public KeyGen(CharSet charSet, String encryptedText) {
-        this(charSet, encryptedText, 1);
+    public KeyGen(CharSet keyCharSet, String encryptedText) {
+        this(keyCharSet, encryptedText, 3, null);
     }
 
-    public KeyGen(CharSet keyCharSet, String encryptedText, int keyMaxLength) {
+    public KeyGen(CharSet keyCharSet, String encryptedText, int keyMaxLength, String dictionaryPath) {
         this.keyCharSet = keyCharSet;
         this.keyMaxLength = keyMaxLength;
 
@@ -29,10 +29,12 @@ public class KeyGen {
             decrypter = new Vigenere(encryptedText);
 
         if (decrypter != null)
-            keyTester = new KeyTester(decrypter, keyCharSet);
+            keyTester = new KeyTester(decrypter, dictionaryPath, keyCharSet);
     }
 
     public void generateAll() {
+        keyDecryptions = "";
+
         if (keyCharSet == CharSet.NUMERIC) {
             // Ceasar ciphers are encrypted with a numeric shift
             // To generate all possible shifts, we test them all from 0 - 26 (inclusive)
@@ -54,11 +56,9 @@ public class KeyGen {
                 for (int i = 0; i < Math.pow(26, currentLength); i++) {
                     if (keyTester.isValidKey(currentKey)) {
                         keyDecryptions += currentKey + "\0" + decrypter.decrypt(currentKey, keyCharSet) + "\0";
-                        System.out.println(currentKey);
                     }
-
+                    System.out.println(currentKey);
                     currentKey = getNextKey(currentKey);
-
                 }
             }
         }

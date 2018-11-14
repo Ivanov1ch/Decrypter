@@ -11,10 +11,11 @@
 public class KeyGenTester {
 
     public static void main(String[] args) {
-        KeyGen keyGen = new KeyGen(CharSet.ALPHABETIC, "hblio qhbrb", 2);
-        keyGen.generateAll();
+        KeyGen keyGen = new KeyGen(CharSet.ALPHABETIC, "tqv qdzct srxnn ofx slmyj oevr cyiakene urzh uopj", 3, "/home/daniv/Dropbox/Programming/AP Java/Projects/Decrypter/decryption/dictionary.txt");
 
-        System.out.println(keyGen.getKeyDecryptions());
+
+        Decrypter decrypter = new Vigenere("ujh rwldm esqzo hry lxnrv pxhs 13 ndaa gpiv. {qkfp_ewg-123456}");
+        System.out.println(decrypter.decrypt("abc"));
     }
 
 }

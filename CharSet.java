@@ -12,6 +12,8 @@ public enum CharSet {
 	ALPHABETIC ('a', 26),
 
 	NUMERIC ('0', 10),
+
+	PUNCTUATION('.', 31), // All the symbols on a common QUERTY keyboard
 	
 	ALPHANUMERIC ('a', 26);
 	
@@ -34,9 +36,11 @@ public enum CharSet {
 	boolean isInCharSet(char c) {
 		if (this == CharSet.ALPHANUMERIC) {
 			return CharSet.ALPHABETIC.isInCharSet(c) || CharSet.NUMERIC.isInCharSet(c);
-		}
-		if (this == CharSet.ALPHABETIC) {
+		} else if (this == CharSet.ALPHABETIC) {
 			c = Character.toLowerCase(c);
+		} else if (this == CharSet.PUNCTUATION) {
+			String punctuation = ".,/?<>;:\"'[]{}|\\+=_-()*&^%$#@!`~";
+			return punctuation.indexOf(c) > -1;
 		}
 		
 		return c - baseChar < numChars && c - baseChar > 0;

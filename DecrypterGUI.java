@@ -56,21 +56,21 @@ public class DecrypterGUI extends JFrame
         String key = keyInput.getText();
         if(key.equals("") || key.equals("Enter your key here, or no key for brute force\0")) {
         	// No key was provided
-        	keyGen = new KeyGen(decrypter, text, 3);
+        	keyGen = new KeyGen(decrypter, text, 3, "/home/daniv/Dropbox/Programming/AP Java/Projects/Decrypter/dictionary.txt");
         	setText(); // too complex for this method alone
         }
         else {
         	Decrypter cipher;
         	switch (decrypter) {
-        		case NUMERIC:
-        			cipher = new Caesar(text);
-        			break;
         		case ALPHABETIC:
         			cipher = new Vigenere(text);
         			break;
+                default:
+                    cipher = new Caesar(text);
+                    break;
         	}
         	plaintext.setText(cipher.decrypt(key));
-        	keyGuesses.setText("");
+            keyGuess.setText("");
         }
     }
     
@@ -87,7 +87,7 @@ public class DecrypterGUI extends JFrame
     		}
     	}
     	plaintext.setText(texts);
-    	keyGuesses.setText(keys);
+        keyGuess.setText(keys);
     }
 
     // Called when the Refresh burron is clicked
@@ -178,7 +178,7 @@ public class DecrypterGUI extends JFrame
     }
 
     public static void main(String[] args) {
-        DecrypterGUI window = new DecrypterGUI();
+        DecrypterGUI window = new DecrypterGUI(1);
         window.setBounds(100, 100, 480, 480);
         window.setDefaultCloseOperation(EXIT_ON_CLOSE);
         window.setVisible(true);

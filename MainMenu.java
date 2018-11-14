@@ -29,6 +29,6 @@ import javax.swing.JOptionPane;
  	}
  	
  	private static int getChosenDecrypter() {
- 	
+ 		return 1;
  	}
  }

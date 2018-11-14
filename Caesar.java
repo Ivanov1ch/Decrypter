@@ -24,7 +24,7 @@ public class Caesar extends Decrypter {
         String plainText = "";
         for (int i = 0; i < cipherText.length(); i++) {
             char c = cipherText.charAt(i);
-            if (charset.isInCharSet(c))
+            if (charset.isInCharSet(c) && !CharSet.PUNCTUATION.isInCharSet(c))
                 c = super.undoShift(c, shift, charset);
 
             plainText += "" + c;

@@ -16,19 +16,24 @@ public class KeyTester {
     private final double PERCENT_VALID_WORDS = 0.9; // How many of the words need to be valid in order to accept the key as valid (0.9 = 90%)
     private Decrypter decrypter;
     private CharSet keyCharSet; // The CharSet that will be applied to the key
-    private String dictionaryPath = "C:\\Users\\daniv\\Dropbox\\Programming\\AP Java\\Projects\\Decrypter\\decryption\\dictionary.txt";
+    private String dictionaryPath;
     private String validWords = "";
 
     public KeyTester() {
-        this(null, CharSet.NUMERIC);
+        this(null, null, CharSet.NUMERIC);
     }
 
     public KeyTester(Decrypter decrypter) {
-        this(decrypter, CharSet.NUMERIC);
+        this(decrypter, null, CharSet.NUMERIC);
     }
 
-    public KeyTester(Decrypter decrypter, CharSet keyCharSet) {
+    public KeyTester(Decrypter decrypter, CharSet charSet) {
+        this(decrypter, null, charSet);
+    }
+
+    public KeyTester(Decrypter decrypter, String dictionaryPath, CharSet keyCharSet) {
         this.decrypter = decrypter;
+        this.dictionaryPath = dictionaryPath;
         this.keyCharSet = keyCharSet;
 
         File dict;
@@ -40,7 +45,7 @@ public class KeyTester {
 
             while (scanner.hasNextLine()) {
                 String word = scanner.nextLine();
-                validWords += word;
+                validWords += word.toLowerCase() + "\n";
             }
 
             scanner.close();
@@ -85,20 +90,21 @@ public class KeyTester {
 
     private boolean isValidDecryption(String decryption) {
         int numValidWords = 0;
-        int lastSpaceIndex = decryption.length();
         int numSpaces = decryption.length() - decryption.replaceAll(" ", "").length();
         int numWords = numSpaces + 1;
 
-        do {
-            lastSpaceIndex = decryption.lastIndexOf(" ", lastSpaceIndex);
-            int nextSpaceIndex = decryption.lastIndexOf(" ", lastSpaceIndex);
-
-            String word = decryption.substring(nextSpaceIndex + 1, lastSpaceIndex);
-
-            if (validWords.indexOf(word) > -1)
+        for (String word : decryption.split(" ")) {
+            if (validWords.indexOf(word.toLowerCase()) > -1)
                 numValidWords++;
-        } while (decryption.lastIndexOf(" ", lastSpaceIndex) > -1);
+        }
 
-        return (double) (numValidWords) / numWords >= PERCENT_VALID_WORDS;
+        double percentValidWords = (double) (numValidWords) / numWords;
+
+        if (numWords <=4)
+            return percentValidWords == 1;
+        else if (numWords <= 8)
+            return percentValidWords >= 0.75;
+        else
+            return percentValidWords >= PERCENT_VALID_WORDS;
     }
 }

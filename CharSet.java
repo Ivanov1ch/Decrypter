@@ -43,7 +43,7 @@ public enum CharSet {
 			return punctuation.indexOf(c) > -1;
 		}
 		
-		return c - baseChar < numChars && c - baseChar > 0;
+		return c - baseChar < numChars && c - baseChar >= 0;
 	}
 	
 	boolean isAlphabetic() {

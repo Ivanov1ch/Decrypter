@@ -24,6 +24,10 @@ public class Caesar extends Decrypter {
         String plainText = "";
         for (int i = 0; i < cipherText.length(); i++) {
             char c = cipherText.charAt(i);
+
+            if (c == 'a' && cipherText.length() == 26)
+                System.out.println();
+
             if (charset.isInCharSet(c) && !CharSet.PUNCTUATION.isInCharSet(c))
                 c = super.undoShift(c, shift, charset);
 
@@ -35,23 +39,16 @@ public class Caesar extends Decrypter {
 
     @Override
     public String decrypt(String key) {
-		return decrypt(key, CharSet.ALPHANUMERIC);
+        return decrypt(key, CharSet.ALPHANUMERIC);
     }
 
     @Override
     public String decrypt(String key, CharSet charset) {
-    	if (key.length() > 1)
-    		return null;
-    	char c = key.charAt(0);
-        if (Character.isDigit(c)) {
-            return decrypt(Integer.parseInt("" + key.charAt(0)), charset);
-        } 
-        else if (Character.isLetter(c)) {
-			c = Character.toLowerCase(c);
-			System.out.println(c);
-            return decrypt((int) (c - 'a'), charset);
+        try {
+            return decrypt(Integer.parseInt(key) % 26, charset);
+        } catch (Exception e) {
+            return null;
         }
-        return null;
     }
 
     public static void main(String[] args) {

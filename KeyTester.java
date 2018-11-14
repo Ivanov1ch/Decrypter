@@ -89,6 +89,9 @@ public class KeyTester {
     }
 
     private boolean isValidDecryption(String decryption) {
+        if(decryption == null)
+            return false;
+
         int numValidWords = 0;
         int numSpaces = decryption.length() - decryption.replaceAll(" ", "").length();
         int numWords = numSpaces + 1;

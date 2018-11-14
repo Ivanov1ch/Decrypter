@@ -33,35 +33,34 @@ public class KeyGen {
     }
 
     public void generateAll() {
-        keyDecryptions = "";
+        if (keyTester != null) {
+            keyDecryptions = "";
 
-        if (keyCharSet == CharSet.NUMERIC) {
-            // Ceasar ciphers are encrypted with a numeric shift
-            // To generate all possible shifts, we test them all from 0 - 26 (inclusive)
+            if (keyCharSet == CharSet.NUMERIC) {
+                // Ceasar ciphers are encrypted with a numeric shift
+                // To generate all possible shifts, we test them all from 0 - 26 (inclusive)
 
-            for (int shift = 0; shift <= 26; shift++) {
+                for (int shift = 0; shift < 26; shift++) {
 
-                String shiftString = Integer.toString(shift);
+                    String shiftString = Integer.toString(shift);
 
-                if (keyTester.isValidKey(shiftString)) {
-                    keyDecryptions += shift + "\0" + decrypter.decrypt(shiftString, keyCharSet) + "\0";
-                }
-            }
-        } else if (keyCharSet == CharSet.ALPHABETIC) {
-            // Generates all possible strings up to length keyMaxLength
-
-            for (int currentLength = 1; currentLength <= keyMaxLength; currentLength++) {
-                String currentKey = "";
-                System.out.println(currentKey);
-                for(int i = 0; i < currentLength; i++, currentKey += "a");
-                System.out.println(currentKey);
-
-                for (int i = 0; i < Math.pow(26, currentLength); i++) {
-                    if (keyTester.isValidKey(currentKey)) {
-                        keyDecryptions += currentKey + "\0" + decrypter.decrypt(currentKey, keyCharSet) + "\0";
+                    if (keyTester.isValidKey(shiftString)) {
+                        keyDecryptions += shift + "\0" + decrypter.decrypt(shiftString, keyCharSet) + "\0";
                     }
-                    System.out.println(currentKey);
-                    currentKey = getNextKey(currentKey);
+                }
+            } else if (keyCharSet == CharSet.ALPHABETIC) {
+                // Generates all possible strings up to length keyMaxLength
+
+                for (int currentLength = 1; currentLength <= keyMaxLength; currentLength++) {
+                    String currentKey = "a".repeat(currentLength);
+
+                    for (int i = 0; i < Math.pow(26, currentLength); i++) {
+                        if (keyTester.isValidKey(currentKey)) {
+                            keyDecryptions += currentKey + "\0" + decrypter.decrypt(currentKey, keyCharSet) + "\0";
+                        }
+                        System.out.println(currentKey);
+                        currentKey = getNextKey(currentKey);
+                    }
                 }
             }
         }
@@ -85,7 +84,7 @@ public class KeyGen {
         char lastChar = (char) (lowerCaseKey.charAt(lastCharIndex) + 1);
 
         String newKey;
-        if(lastCharIndex != 0)
+        if (lastCharIndex != 0)
             newKey = lowerCaseKey.substring(0, lastCharIndex) + lastChar; // Increment the last character
         else
             newKey = Character.toString(lastChar);
@@ -100,14 +99,14 @@ public class KeyGen {
 
                     String tempNewKey = newKey; // Keep the current newKey so that we can access it later when newKey is modified
 
-                    if(currentIndex != 1)
+                    if (currentIndex != 1)
                         newKey = newKey.substring(0, currentIndex - 1);
                     else
                         newKey = "";
 
                     newKey += Character.toString(previousChar) + Character.toString(currentChar);
 
-                    if(currentIndex != lastCharIndex)
+                    if (currentIndex != lastCharIndex)
                         newKey += tempNewKey.substring(currentIndex + 1);
                 }
             }

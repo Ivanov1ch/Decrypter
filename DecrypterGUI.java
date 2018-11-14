@@ -16,12 +16,22 @@ public class DecrypterGUI extends JFrame
         implements ActionListener {
     private JTextArea ciphertext, plaintext, keyInput, keyGuess;
     private JButton go;
+    private KeyGen keyGen;
+    private CharSet decrypter; // CharSet of the key: NUMERIC for Caesar, ALPHABETIC for Vigenere
 
     // Constructor
-    public DecrypterGUI() {
+    public DecrypterGUI(int decrypterNum) {
         super("Decrypter");
 
-        //setJMenuBar(new DecrypterMenu(this));
+		switch (decrypterNum) {
+			case 1:
+				decrypter = CharSet.NUMERIC;
+				break;
+			case 2:
+				decrypter = CharSet.ALPHABETIC;
+				break;
+		}
+
         setupGui();
 
         ciphertext.setText("Type or paste your text here or load it from a file");
@@ -43,8 +53,41 @@ public class DecrypterGUI extends JFrame
 
     public void refresh() {
         String text = ciphertext.getText();
-        Encryptor encryptor = new Encryptor(text);
-        plaintext.setText(encryptor.getEncrypted());
+        String key = keyInput.getText();
+        if(key.equals("") || key.equals("Enter your key here, or no key for brute force\0")) {
+        	// No key was provided
+        	keyGen = new KeyGen(decrypter, text, 3);
+        	setText(); // too complex for this method alone
+        }
+        else {
+        	Decrypter cipher;
+        	switch (decrypter) {
+        		case NUMERIC:
+        			cipher = new Caesar(text);
+        			break;
+        		case ALPHABETIC:
+        			cipher = new Vigenere(text);
+        			break;
+        	}
+        	plaintext.setText(cipher.decrypt(key));
+        	keyGuesses.setText("");
+        }
+    }
+    
+    private void setText() {
+    	String decryptions = keyGen.getKeyDecryptions();
+    	String keys = "", texts = "";
+    	String[] strings = decryptions.split("\0");
+    	for(int i = 0; i < strings.length; i++) {
+    		if(i % 2 == 0) {
+    			keys += strings[i] + "\n";
+    		}
+    		else {
+    			texts += strings[i] + "\n";
+    		}
+    	}
+    	plaintext.setText(texts);
+    	keyGuesses.setText(keys);
     }
 
     // Called when the Refresh burron is clicked

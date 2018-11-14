@@ -31,7 +31,6 @@ public class Vigenere extends Decrypter {
 		        int shift = key.charAt(keyIndex % key.length()); 
 		        if (Character.isLetter(shift)) {
 		            shift -= Character.isUpperCase((char) shift) ? 'A' : 'a';
-		            shift++;
 		        }
 		        else if (Character.isDigit(shift)) {
 		        	shift -= '0';

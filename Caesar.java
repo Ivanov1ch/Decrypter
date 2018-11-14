@@ -49,7 +49,7 @@ public class Caesar extends Decrypter {
         else if (Character.isLetter(c)) {
 			c = Character.toLowerCase(c);
 			System.out.println(c);
-            return decrypt((int) (c - 'a') + 1, charset);
+            return decrypt((int) (c - 'a'), charset);
         }
         return null;
     }

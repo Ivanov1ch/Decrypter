@@ -18,6 +18,7 @@ import javax.swing.JOptionPane;
  			switch (chosenDecrypter) {
  				case 1:
  					// init Caesar GUI
+ 					
  					break;
  				case 2:
  					// init Vigenere GUI

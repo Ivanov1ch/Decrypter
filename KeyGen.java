@@ -51,7 +51,8 @@ public class KeyGen {
             // Generates all possible strings up to length keyMaxLength
 
             for (int currentLength = 1; currentLength <= keyMaxLength; currentLength++) {
-                String currentKey = "a".repeat(currentLength);
+                String currentKey = "";
+                for(int i = 0; i < currentLength; i++, currentKey += "a");
 
                 for (int i = 0; i < Math.pow(26, currentLength); i++) {
                     if (keyTester.isValidKey(currentKey)) {
@@ -71,7 +72,9 @@ public class KeyGen {
 
         String lowerCaseKey = currentKey.toLowerCase();
 
-        if (lowerCaseKey.equals("z".repeat(lowerCaseKey.length())))
+		String Zs = "";
+		for(int i = 0; i < lowerCaseKey.length(); i++, currentKey += "z");
+        if (lowerCaseKey.equals(Zs))
             return null;
 
         int lastCharIndex = lowerCaseKey.length() - 1;

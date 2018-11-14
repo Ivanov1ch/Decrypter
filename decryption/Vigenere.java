@@ -26,7 +26,7 @@ public class Vigenere extends Decrypter {
         String plainText = "";
         for (int i = 0, keyIndex = 0; i < cipherText.length(); i++) {
             char c = cipherText.charAt(i);
-            if (!Character.isWhitespace(c)) {
+            if (charset.isInCharSet(c)) {
 
 		        int shift = key.charAt(keyIndex % key.length()); 
 		        if (Character.isLetter(shift)) {

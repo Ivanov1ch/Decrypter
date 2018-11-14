@@ -21,7 +21,7 @@ public class DecrypterGUI extends JFrame
     public DecrypterGUI() {
         super("Decrypter");
 
-        setJMenuBar(new DecrypterMenu(this));
+        //setJMenuBar(new DecrypterMenu(this));
         setupGui();
 
         ciphertext.setText("Type or paste your text here or load it from a file");

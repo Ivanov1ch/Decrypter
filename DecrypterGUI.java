@@ -56,7 +56,9 @@ public class DecrypterGUI extends JFrame
         String key = keyInput.getText();
         if(key.equals("") || key.equals("Enter your key here, or no key for brute force\0")) {
         	// No key was provided
-        	keyGen = new KeyGen(decrypter, text, 3, "/home/daniv/Dropbox/Programming/AP Java/Projects/Decrypter/dictionary.txt");
+        	System.out.println("before");
+        	keyGen = new KeyGen(decrypter, text, 3, "./dictionary.txt");
+        	System.out.println("after");
         	setText(); // too complex for this method alone
         }
         else {

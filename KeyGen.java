@@ -52,7 +52,9 @@ public class KeyGen {
 
             for (int currentLength = 1; currentLength <= keyMaxLength; currentLength++) {
                 String currentKey = "";
+                System.out.println(currentKey);
                 for(int i = 0; i < currentLength; i++, currentKey += "a");
+                System.out.println(currentKey);
 
                 for (int i = 0; i < Math.pow(26, currentLength); i++) {
                     if (keyTester.isValidKey(currentKey)) {
@@ -73,7 +75,9 @@ public class KeyGen {
         String lowerCaseKey = currentKey.toLowerCase();
 
 		String Zs = "";
+		System.out.println(Zs);
 		for(int i = 0; i < lowerCaseKey.length(); i++, currentKey += "z");
+		System.out.println(Zs);
         if (lowerCaseKey.equals(Zs))
             return null;
 

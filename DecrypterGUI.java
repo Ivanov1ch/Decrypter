@@ -23,7 +23,6 @@ import javax.swing.JLabel;
 public class DecrypterGUI extends JFrame
         implements ActionListener {
     private JTextArea ciphertext, plaintext, keyInput, keyGuess;
-    private boolean firstRefresh = true; // Is it the first time the window is refreshed? Prevents an auto brute-force
     private JButton go;
     private KeyGen keyGen;
     private CharSet decrypterCharSet; // CharSet of the key: NUMERIC for Caesar, ALPHABETIC for Vigenere
@@ -46,14 +45,11 @@ public class DecrypterGUI extends JFrame
 
         ciphertext.setText("Type or paste your text here...");
         keyInput.setText(defaultKeyMessage);
-        refresh();
     }
 
     public void refresh() {
         String text = ciphertext.getText().trim();
         String key = keyInput.getText();
-        if (!firstRefresh) {
-
             boolean isKeyLength = decrypterCharSet != CharSet.NUMERIC;
 
             if(isKeyLength) {
@@ -68,31 +64,29 @@ public class DecrypterGUI extends JFrame
 
                 int maxLength = 3;
 
-                try {
-                    maxLength = Integer.parseInt(key);
-                } catch (NumberFormatException e) {
-                    // This means that the user didn't specify how long they wanted their key, but rather inputted a key (or nothing at all) and want default brute forcing
-                    // This means that we can leave maxLength at the default: 3
-                }
-
-                keyGen = new KeyGen(decrypterCharSet, text, maxLength, "dictionary.txt");
-                keyGen.generateAll();
-                setText(); // Take the KeyGen's output, format it, and display it in the lower text boxes
-            } else {
-                Decrypter cipher;
-                switch (decrypterCharSet) {
-                    case ALPHABETIC:
-                        cipher = new Vigenere(text);
-                        break;
-                    default:
-                        cipher = new Caesar(text);
-                        break;
-                }
-                plaintext.setText(cipher.decrypt(key));
-                keyGuess.setText("");
+            try {
+                maxLength = Integer.parseInt(key);
+            } catch (NumberFormatException e) {
+                // This means that the user didn't specify how long they wanted their key, but rather inputted a key (or nothing at all) and want default brute forcing
+                // This means that we can leave maxLength at the default: 3
             }
-        } else
-            firstRefresh = false;
+
+            keyGen = new KeyGen(decrypterCharSet, text, maxLength, "dictionary.txt");
+            keyGen.generateAll();
+            setText(); // Take the KeyGen's output, format it, and display it in the lower text boxes
+        } else {
+            Decrypter cipher;
+            switch (decrypterCharSet) {
+                case ALPHABETIC:
+                    cipher = new Vigenere(text);
+                    break;
+                default:
+                    cipher = new Caesar(text);
+                    break;
+            }
+            plaintext.setText(cipher.decrypt(key));
+            keyGuess.setText("");
+        }
     }
 
     private void setText() {
@@ -107,7 +101,7 @@ public class DecrypterGUI extends JFrame
             }
         }
 
-        if (strings.length == 1) {
+        if (strings.length <= 1) {
             texts = "No probable decryptions found";
             keys = "No probable keys found";
         }

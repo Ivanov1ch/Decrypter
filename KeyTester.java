@@ -10,6 +10,7 @@
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.*;
 
 public class KeyTester {
 
@@ -17,7 +18,7 @@ public class KeyTester {
     private Decrypter decrypter;
     private CharSet keyCharSet; // The CharSet that will be applied to the key
     private String dictionaryPath;
-    private String validWords = "";
+    private List<String> validWords = new ArrayList<String>();
 
     public KeyTester() {
         this(null, null, CharSet.NUMERIC);
@@ -45,7 +46,7 @@ public class KeyTester {
 
             while (scanner.hasNextLine()) {
                 String word = scanner.nextLine();
-                validWords += word.toLowerCase() + "\n";
+                validWords.add(word.toLowerCase());
             }
 
             scanner.close();
@@ -87,6 +88,30 @@ public class KeyTester {
                 return false;
         }
     }
+    
+    private boolean dictContains(String word) {
+    	int low = 0;
+    	int high = validWords.size();
+    	while(true) {
+    		int mid = (low + high) / 2;
+    		if(mid == low)
+    			break;
+    		if(word.compareTo(validWords.get(mid)) >= 0)
+    			low = mid;
+    		else
+    			high = mid;
+    	}
+    	return word.equals(validWords.get(low));
+    }
+    
+    /*private String removePunctuation(String in) {
+    	//in.replace(".", "");
+    	String punctuation = ".,/?<>;:\"'[]{}|\\+=_-()*&^%$#@!`~";
+    	for(int i = 0; i < punctuation.length(); i++) {
+    		in.replaceAll("" + punctuation.charAt(i), "");
+    	}
+    	return in;
+    }*/
 
     private boolean isValidDecryption(String decryption) {
         if (decryption == null)
@@ -95,9 +120,10 @@ public class KeyTester {
         int numValidWords = 0;
         int numSpaces = decryption.length() - decryption.replaceAll(" ", "").length();
         int numWords = numSpaces + 1;
+        decryption = removePunctuation(decryption);
 
         for (String word : decryption.split(" ")) {
-            if (validWords.indexOf(removePunctuation(word.toLowerCase())) > -1)
+            if (dictContains(word.toLowerCase()))
                 numValidWords++;
         }
 
@@ -115,10 +141,10 @@ public class KeyTester {
         String editedWord = "";
 
         for(int i = 0; i < word.length(); i++) {
-            char cuttentChar = word.charAt(i);
+            char currentChar = word.charAt(i);
 
-            if(!CharSet.PUNCTUATION.isInCharSet(cuttentChar)) {
-                editedWord += cuttentChar;
+            if(!CharSet.PUNCTUATION.isInCharSet(currentChar)) {
+                editedWord += currentChar;
             }
         }
 

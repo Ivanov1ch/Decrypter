@@ -97,7 +97,7 @@ public class KeyTester {
         int numWords = numSpaces + 1;
 
         for (String word : decryption.split(" ")) {
-            if (validWords.indexOf(word.toLowerCase()) > -1)
+            if (validWords.indexOf(removePunctuation(word.toLowerCase())) > -1)
                 numValidWords++;
         }
 
@@ -109,5 +109,19 @@ public class KeyTester {
             return percentValidWords >= 0.75;
         else
             return percentValidWords >= PERCENT_VALID_WORDS;
+    }
+
+    private String removePunctuation (String word) {
+        String editedWord = "";
+
+        for(int i = 0; i < word.length(); i++) {
+            char cuttentChar = word.charAt(i);
+
+            if(!CharSet.PUNCTUATION.isInCharSet(cuttentChar)) {
+                editedWord += cuttentChar;
+            }
+        }
+
+        return editedWord;
     }
 }

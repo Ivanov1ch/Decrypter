@@ -45,7 +45,7 @@ public class KeyGen {
                     String shiftString = Integer.toString(shift);
 
                     if (keyTester.isValidKey(shiftString)) {
-                        keyDecryptions += shift + "\0" + decrypter.decrypt(shiftString, keyCharSet) + "\0";
+                        keyDecryptions += shift + "\0" + decrypter.decrypt(shiftString) + "\0";
                     }
                 }
             } else if (keyCharSet == CharSet.ALPHABETIC) {
@@ -56,7 +56,7 @@ public class KeyGen {
 
                     for (int i = 0; i < Math.pow(26, currentLength); i++) {
                         if (keyTester.isValidKey(currentKey)) {
-                            keyDecryptions += currentKey + "\0" + decrypter.decrypt(currentKey, keyCharSet) + "\0";
+                            keyDecryptions += currentKey + "\0" + decrypter.decrypt(currentKey) + "\0";
                         }
                         currentKey = getNextKey(currentKey);
                     }

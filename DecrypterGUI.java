@@ -54,17 +54,19 @@ public class DecrypterGUI extends JFrame
         String key = keyInput.getText();
         if (!firstRefresh) {
 
-            boolean isKeyLength = true;
+            boolean isKeyLength = decrypterCharSet != CharSet.NUMERIC;
 
-            for (char c : key.toCharArray()) {
-                if (!CharSet.NUMERIC.isInCharSet(c) && !Character.isWhitespace(c))
-                    isKeyLength = false;
+            if(isKeyLength) {
+                for (char c : key.toCharArray()) {
+                    if (!CharSet.NUMERIC.isInCharSet(c) && !Character.isWhitespace(c))
+                        isKeyLength = false;
+                }
             }
 
-            if (key.equals("") || key.trim().equals("") || key.equals(defaultKeyMessage) || isKeyLength) {
+            if (key.equals("") || key.equals(defaultKeyMessage) || isKeyLength) {
                 // No key was provided, or they entered the maximum length of the key
 
-                int maxLength = 2;
+                int maxLength = 3;
 
                 try {
                     maxLength = Integer.parseInt(key);
@@ -86,7 +88,7 @@ public class DecrypterGUI extends JFrame
                         cipher = new Caesar(text);
                         break;
                 }
-                plaintext.setText(cipher.decrypt(key.trim()));
+                plaintext.setText(cipher.decrypt(key));
                 keyGuess.setText("");
             }
         } else

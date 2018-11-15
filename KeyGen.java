@@ -1,6 +1,6 @@
 /**
  * File:        KeyGen.java
- * Description: Generates possible keys and tests them.
+ * Description: Generates all possible keys and tests them, storing the successful key-decryption combinations.
  * Created:     mm/dd/yyyy
  *
  * @author author
@@ -58,7 +58,6 @@ public class KeyGen {
                         if (keyTester.isValidKey(currentKey)) {
                             keyDecryptions += currentKey + "\0" + decrypter.decrypt(currentKey, keyCharSet) + "\0";
                         }
-                        System.out.println(currentKey);
                         currentKey = getNextKey(currentKey);
                     }
                 }
@@ -73,10 +72,8 @@ public class KeyGen {
 
         String lowerCaseKey = currentKey.toLowerCase();
 
-		String Zs = "";
-		System.out.println(Zs);
-		for(int i = 0; i < lowerCaseKey.length(); i++, currentKey += "z");
-		System.out.println(Zs);
+        String Zs = "";
+        for (int i = 0; i < lowerCaseKey.length(); i++, currentKey += "z") ;
         if (lowerCaseKey.equals(Zs))
             return null;
 

@@ -1,6 +1,6 @@
 /**
  * File:        MainMenu.java
- * Description: Description.
+ * Description: Displays the JOptionPane main menu, and controls the creation and display of DecrypterGUIs.
  * Created:     11/14/2018
  *
  * @author Justin Zhu and daniv
@@ -61,7 +61,8 @@ public class MainMenu {
             window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             window.setVisible(true);
 
-            while(window.isVisible()){} // Wait, so a new main menu doesn't open
+            while (window.isVisible()) {
+            } // Wait, so a new main menu doesn't open
         }
     }
 }

@@ -1,6 +1,6 @@
 /**
  * File:        Caesar.java
- * Description: Decrypts Caesar Ciphers with a shift.
+ * Description: Decrypts Caesar Ciphers with a given shift and/or CharSet.
  * Created:     11/08/18
  *
  * @author Justin Zhu
@@ -25,9 +25,6 @@ public class Caesar extends Decrypter {
         for (int i = 0; i < cipherText.length(); i++) {
             char c = cipherText.charAt(i);
 
-            if (c == 'a' && cipherText.length() == 26)
-                System.out.println();
-
             if (charset.isInCharSet(c) && !CharSet.PUNCTUATION.isInCharSet(c))
                 c = super.undoShift(c, shift, charset);
 
@@ -49,11 +46,5 @@ public class Caesar extends Decrypter {
         } catch (Exception e) {
             return null;
         }
-    }
-
-    public static void main(String[] args) {
-        Caesar caesar = new Caesar("bcde 1234");
-        System.out.println(caesar.decrypt("a"));
-
     }
 }

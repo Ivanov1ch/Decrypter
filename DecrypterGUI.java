@@ -1,3 +1,12 @@
+/**
+ * File:        DecrypterGUI.java
+ * Description: The JFrame that handles user interaction. It takes in encrypted messages and keys, and outputs deceptions.
+ * Created:     11/13/2018
+ *
+ * @author Justin Zhu and danIv
+ * @version 1.0
+ */
+
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.FlowLayout;
@@ -9,7 +18,6 @@ import javax.swing.Box;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
-import java.awt.Dimension;
 import javax.swing.JLabel;
 
 public class DecrypterGUI extends JFrame
@@ -19,44 +27,54 @@ public class DecrypterGUI extends JFrame
     private JButton go;
     private KeyGen keyGen;
     private CharSet decrypterCharSet; // CharSet of the key: NUMERIC for Caesar, ALPHABETIC for Vigenere
+    private String defaultKeyMessage = "Enter your key here, or no key for brute force\0";
 
     // Constructor
     public DecrypterGUI(int decrypterNum) {
         super("Decrypter");
 
-        if (decrypterNum == 1)
+        if (decrypterNum == 1) {
+            // Caesar cipher
             decrypterCharSet = CharSet.NUMERIC;
-        else if (decrypterNum == 2)
+        } else if (decrypterNum == 2) {
+            // Vigenere cipher
+            defaultKeyMessage = "Enter your key here, the length of the longest key you want to try, or nothing at all for a brute force of keys up to 3 characters in length\0";
             decrypterCharSet = CharSet.ALPHABETIC;
-
+        }
         setupGui();
 
-        ciphertext.setText("Type or paste your text here or load it from a file");
-        keyInput.setText("Enter your key here, or no key for brute force\0");
+        ciphertext.setText("Type or paste your text here...");
+        keyInput.setText(defaultKeyMessage);
         refresh();
     }
 
-    public String getText() {
-        return ciphertext.getText();
-    }
-
-    public String getEncrypted() {
-        return plaintext.getText();
-    }
-
-    public void setText(String text) {
-        ciphertext.setText(text);
-    }
-
     public void refresh() {
-        String text = ciphertext.getText();
+        String text = ciphertext.getText().trim();
         String key = keyInput.getText();
         if (!firstRefresh) {
-            if (key.equals("") || key.equals("Enter your key here, or no key for brute force\0")) {
-                // No key was provided
-                keyGen = new KeyGen(decrypterCharSet, text, 2, "dictionary.txt");
+
+            boolean isKeyLength = true;
+
+            for (char c : key.toCharArray()) {
+                if (!CharSet.NUMERIC.isInCharSet(c) && !Character.isWhitespace(c))
+                    isKeyLength = false;
+            }
+
+            if (key.equals("") || key.trim().equals("") || key.equals(defaultKeyMessage) || isKeyLength) {
+                // No key was provided, or they entered the maximum length of the key
+
+                int maxLength = 2;
+
+                try {
+                    maxLength = Integer.parseInt(key);
+                } catch (NumberFormatException e) {
+                    // This means that the user didn't specify how long they wanted their key, but rather inputted a key (or nothing at all) and want default brute forcing
+                    // This means that we can leave maxLength at the default: 3
+                }
+
+                keyGen = new KeyGen(decrypterCharSet, text, maxLength, "dictionary.txt");
                 keyGen.generateAll();
-                setText(); // too complex for this method alone
+                setText(); // Take the KeyGen's output, format it, and display it in the lower text boxes
             } else {
                 Decrypter cipher;
                 switch (decrypterCharSet) {
@@ -67,7 +85,7 @@ public class DecrypterGUI extends JFrame
                         cipher = new Caesar(text);
                         break;
                 }
-                plaintext.setText(cipher.decrypt(key));
+                plaintext.setText(cipher.decrypt(key.trim()));
                 keyGuess.setText("");
             }
         } else
@@ -85,6 +103,12 @@ public class DecrypterGUI extends JFrame
                 texts += strings[i] + "\n";
             }
         }
+
+        if (strings.length == 1) {
+            texts = "No probable decryptions found";
+            keys = "No probable keys found";
+        }
+
         plaintext.setText(texts);
         keyGuess.setText(keys);
     }

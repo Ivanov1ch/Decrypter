@@ -1,6 +1,6 @@
 /**
  * File:        KeyTester.java
- * Description: Tests keys until at least 90% of the words are valid in the English dictionary.
+ * Description: Tests keys until a almost all of the words in the decryptions they yield are valid in the American English dictionary.
  * Created:     11/08/2018
  *
  * @author danIv
@@ -89,7 +89,7 @@ public class KeyTester {
     }
 
     private boolean isValidDecryption(String decryption) {
-        if(decryption == null)
+        if (decryption == null)
             return false;
 
         int numValidWords = 0;
@@ -103,7 +103,7 @@ public class KeyTester {
 
         double percentValidWords = (double) (numValidWords) / numWords;
 
-        if (numWords <=4)
+        if (numWords <= 4)
             return percentValidWords == 1;
         else if (numWords <= 8)
             return percentValidWords >= 0.75;

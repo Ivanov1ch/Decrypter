@@ -36,6 +36,7 @@ public class DecrypterGUI extends JFrame
         if (decrypterNum == 1) {
             // Caesar cipher
             decrypterCharSet = CharSet.NUMERIC;
+            defaultKeyMessage = "Enter your shift here, or no shift for brute force\0";
         } else if (decrypterNum == 2) {
             // Vigenere cipher
             defaultKeyMessage = "Enter your key here, the length of the longest key you want to try, or nothing at all for a brute force of keys up to 3 characters in length\0";

@@ -35,7 +35,7 @@ public class MainMenu {
         ImageIcon icon = null;
 
         try {
-            icon = new ImageIcon("encryption-icon.png");
+            icon = new ImageIcon("decrypter-logo.png");
         } catch (Exception e) {
             System.out.println("Unable to find the icon! Showing the ugly GUI instead...");
         }

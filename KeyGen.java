@@ -1,9 +1,9 @@
 /**
  * File:        KeyGen.java
  * Description: Generates all possible keys and tests them, storing the successful key-decryption combinations.
- * Created:     mm/dd/yyyy
+ * Created:     11/09/2018
  *
- * @author author
+ * @author danIv
  * @version 1.0
  */
 
@@ -32,6 +32,7 @@ public class KeyGen {
             keyTester = new KeyTester(decrypter, dictionaryPath, keyCharSet);
     }
 
+    // Generate all possible keys for a specific cipher
     public void generateAll() {
         if (keyTester != null) {
             keyDecryptions = "";

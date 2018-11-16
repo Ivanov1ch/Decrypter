@@ -22,7 +22,7 @@ public abstract class Decrypter {
         this.cipherText = cipherText;
     }
 
-    // this method technically doesn't need a CharSet as input
+    // Shifts characters backwards, instead of forwards like the Caesar and Vigenere ciphers do
     public static char undoShift(char c, int shift, CharSet charset) {
         if (Character.isLetter(c)) {
             charset = CharSet.ALPHABETIC;

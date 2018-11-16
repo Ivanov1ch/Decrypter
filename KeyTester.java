@@ -88,7 +88,7 @@ public class KeyTester {
                 return false;
         }
     }
-    
+
     private boolean dictContains(String word) {
     	int low = 0;
     	int high = validWords.size();
@@ -103,15 +103,7 @@ public class KeyTester {
     	}
     	return word.equals(validWords.get(low));
     }
-    
-    /*private String removePunctuation(String in) {
-    	//in.replace(".", "");
-    	String punctuation = ".,/?<>;:\"'[]{}|\\+=_-()*&^%$#@!`~";
-    	for(int i = 0; i < punctuation.length(); i++) {
-    		in.replaceAll("" + punctuation.charAt(i), "");
-    	}
-    	return in;
-    }*/
+
 
     private boolean isValidDecryption(String decryption) {
         if (decryption == null)

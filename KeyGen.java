@@ -14,6 +14,7 @@ public class KeyGen {
     private Decrypter decrypter;
     private String keyDecryptions = ""; // A string of all the possible keys and the decryptions they give, separated by \0s
     private KeyTester keyTester;
+    private String currentKey;
 
     public KeyGen(CharSet keyCharSet, String encryptedText) {
         this(keyCharSet, encryptedText, 3, null);
@@ -53,14 +54,14 @@ public class KeyGen {
                 // Generates all possible strings up to length keyMaxLength
 
                 for (int currentLength = 1; currentLength <= keyMaxLength; currentLength++) {
-                    String currentKey = ""; //"a".repeat(currentLength);
+                    currentKey = ""; //"a".repeat(currentLength);
                     for(int i = 0; i < currentLength; i++, currentKey += "a");
 
                     for (int i = 0; i < Math.pow(26, currentLength); i++) {
                         if (keyTester.isValidKey(currentKey)) {
                             keyDecryptions += currentKey + "\0" + decrypter.decrypt(currentKey) + "\0";
                         }
-                        currentKey = getNextKey(currentKey);
+                        currentKey = getNextKey();
                     }
                 }
             }
@@ -68,14 +69,14 @@ public class KeyGen {
     }
 
     // Returns currentKey with the 'least significant' part incremented by 1, returns null if every character is z
-    private String getNextKey(String currentKey) {
+    private String getNextKey() {
         if (currentKey == null)
             return null;
 
         String lowerCaseKey = currentKey.toLowerCase();
 
         String Zs = "";
-        for (int i = 0; i < lowerCaseKey.length(); i++, currentKey += "z") ;
+        for (int i = 0; i < lowerCaseKey.length(); i++, Zs += "z") ;
         if (lowerCaseKey.equals(Zs))
             return null;
 
@@ -116,5 +117,13 @@ public class KeyGen {
 
     public String getKeyDecryptions() {
         return keyDecryptions;
+    }
+    
+    public int getKeyMaxLength() {
+    	return keyMaxLength;
+    }
+    
+    public String getCurrentKey() {
+    	return currentKey;
     }
 }

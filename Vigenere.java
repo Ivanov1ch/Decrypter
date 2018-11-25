@@ -15,7 +15,7 @@ public class Vigenere extends Decrypter {
 
     @Override
     public String decrypt(String key) {
-        return decrypt(key, CharSet.ALPHANUMERIC);
+        return decrypt(key, CharSet.ALPHABETIC);
     }
 
     @Override

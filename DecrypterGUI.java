@@ -7,26 +7,22 @@
  * @version 1.0
  */
 
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.FlowLayout;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.JFrame;
-import javax.swing.JButton;
-import javax.swing.Box;
-import javax.swing.JTextArea;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.JLabel;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import java.beans.*;
 
-public class DecrypterGUI extends JFrame
-        implements ActionListener {
+public class DecrypterGUI 	extends JFrame
+							implements 	ActionListener, 
+										PropertyChangeListener {
     private JTextArea ciphertext, plaintext, keyInput, keyGuess;
     private JButton go;
     private KeyGen keyGen;
     private CharSet decrypterCharSet; // CharSet of the key: NUMERIC for Caesar, ALPHABETIC for Vigenere
     private String defaultKeyMessage = "Enter your key here, or no key for brute force\0";
+    private JProgressBar progressBar;
+    private Task bruteForce;
+    private ProgressMonitor progressMonitor;
 
     // Constructor
     public DecrypterGUI(int decrypterNum) {
@@ -50,30 +46,36 @@ public class DecrypterGUI extends JFrame
     public void refresh() {
         String text = ciphertext.getText().trim();
         String key = keyInput.getText();
-            boolean isKeyLength = decrypterCharSet != CharSet.NUMERIC;
+        boolean isKeyLength = decrypterCharSet != CharSet.NUMERIC;
 
-            if(isKeyLength) {
-                for (char c : key.toCharArray()) {
-                    if (!CharSet.NUMERIC.isInCharSet(c) && !Character.isWhitespace(c))
-                        isKeyLength = false;
-                }
+        if(isKeyLength) {
+            for (char c : key.toCharArray()) {
+                if (!CharSet.NUMERIC.isInCharSet(c) && !Character.isWhitespace(c))
+                    isKeyLength = false;
             }
+        }
 
-            if (key.equals("") || key.equals(defaultKeyMessage) || isKeyLength) {
-                // No key was provided, or they entered the maximum length of the key
+        if (key.equals("") || key.equals(defaultKeyMessage) || isKeyLength) {
+            // No key was provided, or they entered the maximum length of the key
 
-                int maxLength = 3;
+            int maxLength = 3;
 
-            try {
-                maxLength = Integer.parseInt(key);
-            } catch (NumberFormatException e) {
-                // This means that the user didn't specify how long they wanted their key, but rather inputted a key (or nothing at all) and want default brute forcing
-                // This means that we can leave maxLength at the default: 3
-            }
+	        try {
+	            maxLength = Integer.parseInt(key);
+	        } catch (NumberFormatException e) {
+	            // This means that the user didn't specify how long they wanted their key, but rather inputted a key (or nothing at all) and want default brute forcing
+	            // This means that we can leave maxLength at the default: 3
+	        }
 
-            keyGen = new KeyGen(decrypterCharSet, text, maxLength, "dictionary.txt");
-            keyGen.generateAll();
-            setText(); // Take the KeyGen's output, format it, and display it in the lower text boxes
+	        keyGen = new KeyGen(decrypterCharSet, text, maxLength, "dictionary.txt");
+	        
+	        bruteForce = new Task(); // this task should keep track of the progress of the brute force in KeyGen
+	        bruteForce.addPropertyChangeListener(this);
+			System.out.println("executing");
+			bruteForce.execute();
+			
+			keyGen.generateAll();
+	        setText(); // Take the KeyGen's output, format it, and display it in the lower text boxes
         } else {
             Decrypter cipher;
             switch (decrypterCharSet) {
@@ -162,7 +164,6 @@ public class DecrypterGUI extends JFrame
         box1.add(Box.createVerticalStrut(10));
         box1.add(plainTextLabel);
         box1.add(plaintextPane);
-        //box1.add(Box.createVerticalStrut(10));
 
         JLabel keyInputLabel = new JLabel("Key Input:");
         Box box2 = Box.createVerticalBox();
@@ -190,11 +191,84 @@ public class DecrypterGUI extends JFrame
         Box box5 = Box.createVerticalBox();
         box5.add(box3);
         box5.add(Box.createVerticalStrut(10));
+        progressBar = new JProgressBar(0, 100);
+        progressBar.setValue(0);
+        progressBar.setStringPainted(true);
+        box5.add(progressBar);
+        box5.add(Box.createVerticalStrut(10));
         box5.add(boxGo);
 
         Container c = getContentPane();
         c.setLayout(new FlowLayout());
         c.add(box5);
     }
+    
+    private int getKeyGenProgress(String currentKey) {
+    	int length = keyGen.getKeyMaxLength();
+    	// For these purposes, it should be safe to assume the number of chars in the character set + 1 (we will treat no char as a char)
+    	// Example: _z < aa
+    	// _ < a
+    	// So this won't be perfect, but it will do
+    	long power = 1;
+    	long ans = 0;
+    	for(int i = currentKey.length() - 1; i >= 0; i--) {
+    		ans += (currentKey.charAt(i) - CharSet.ALPHABETIC.getBaseChar() + 1) * power;
+    		power *= CharSet.ALPHABETIC.getNumChars() + 1;
+    	}
+    	return (int) (ans * 100 / Math.pow((long) CharSet.ALPHABETIC.getNumChars() + 1, keyGen.getKeyMaxLength()));
+    }
+    
+    // ********************** Multithreading for Progress Bar ******************************** 
+	// Copied (and modified) from ProgressBarDemo.java and ProgressMonitorDemo.java
+    class Task extends SwingWorker<Void, Void> {
+        /*
+         * Main task. Executed in background thread.
+         */
+        @Override
+        public Void doInBackground() {
+        	System.out.println("starting");
+            int progress = 0;
+            //Initialize progress property.
+            setProgress(0);
+            firePropertyChange("progress", 0, progress + 1);
+            while (progress < 100) {
+            	//Sleep for 1/100th of a second.
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException ignore) {}
+                int newProgress = getKeyGenProgress(keyGen.getCurrentKey()) + 1; // +1 because it *should* say 100% at the end
+                System.out.println(progress);
+                newProgress = Math.min(newProgress, 100);
+                setProgress(newProgress);
+                firePropertyChange("progress", progress, newProgress);
+                progress = newProgress;
+            }
+            System.out.println("out of loop");
+            return null;
+        }
+        
+        /*
+         * Executed in event dispatching thread
+         */
+        @Override
+        public void done() {
+            System.out.println("Done!");
+        }
+    }
+    
+    /**
+	 * Invoked when task's progress property changes.
+	 */
+	public void propertyChange(PropertyChangeEvent evt) {
+		if ("progress" == evt.getPropertyName()) {
+			System.out.println("hi");
+			int progress = (Integer) evt.getNewValue();
+			progressBar.setValue(progress);
+			//progressMonitor.setProgress(progress);
+			//String message = String.format("Completed %d%%.\n", progress);
+			//progressMonitor.setNote(message);
+		}
+
+	}
 
 }

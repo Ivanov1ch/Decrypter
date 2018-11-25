@@ -57,6 +57,8 @@ public class KeyTester {
     }
 
     public boolean isValidKey(String key) {
+    	if(key == null)
+    		return false;
         switch (keyCharSet) {
             case NUMERIC:
                 try {
@@ -71,7 +73,8 @@ public class KeyTester {
 
                 // The key matches the format the cipher asks for - we can safely decrypt
                 String decrypted = decrypter.decrypt(key);
-
+				if(decrypted == null)
+					return false;
                 return isValidDecryption(decrypted);
             case ALPHABETIC:
                 if (key.matches(".*\\d+.*")) // Returns true if the string contains a number

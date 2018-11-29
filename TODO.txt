@@ -1,0 +1,12 @@
+Todo List for features to be implemented:
+
+Charsets:
+  ASCII
+
+Decryption:
+  AES ciphers (that PicoCTF uses)
+  RSA
+  Substitution ciphers
+
+UI
+  Progress Bar

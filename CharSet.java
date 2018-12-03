@@ -15,7 +15,9 @@ public enum CharSet {
 
     PUNCTUATION('.', 31), // All the symbols on a common QUERTY keyboard
 
-    ALPHANUMERIC('a', 26);
+    ALPHANUMERIC('a', 26),
+    
+    ASCII('\0', 128);
 
     private final char baseChar;
     private final int numChars;

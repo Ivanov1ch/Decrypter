@@ -10,3 +10,4 @@ Decryption:
 
 UI
   Progress Bar
+  Drop-down to select which characters to decrypt
